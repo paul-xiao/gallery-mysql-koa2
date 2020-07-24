@@ -1,11 +1,41 @@
-const mysql = require('mysql')
-const config = require('./config/db')
-const connection = mysql.createConnection(config)
-connection.connect(function (err) {
-  if (err) {
-    console.error('error connecting: ' + err.stack)
-    return
-  }
+const Koa = require('koa')
+// const koaWebpack = require('koa-webpack')
+const serve = require('koa-static')
+const webpack = require('webpack')
+const { resolve } = require('path')
+const webpackDevMiddleware = require('koa-webpack-dev-middleware')
+const webpackHotMiddleware = require('koa-webpack-hot-middleware')
+const webpackConfig = require('./app/config/webpack.config')
+const router = require('./app/routers') // load routers
+const chalk = require('chalk')
 
-  console.log('connected as id ' + connection.threadId)
+const app = new Koa()
+const compiler = webpack(webpackConfig)
+
+const wdm = webpackDevMiddleware(compiler, {
+  noInfo: true,
+  //publicPath: config.output.publicPath
 })
+
+async function start() {
+  console.log(chalk.bgBlue('wcao111'))
+
+  //  const compiler = webpack(webpackConfig)
+  try {
+    // const middleware = await koaWebpack({
+    //   compiler,
+    // })
+    // app.use(middleware)
+
+    app.use(wdm)
+    app.use(webpackHotMiddleware(compiler))
+    app.use(serve(resolve(__dirname, './app/public'))) // static files
+    app.use(router.routes())
+    app.use(router.allowedMethods())
+    app.listen(3000)
+    console.log(chalk.bgBlue('service running at localhost:3000'))
+  } catch (e) {
+    console.log(e)
+  }
+}
+start()
