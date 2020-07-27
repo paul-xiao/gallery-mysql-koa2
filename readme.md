@@ -39,8 +39,8 @@ create database db_name
 ```sql
 create table if not exists users(
      id INT NOT NULL AUTO_INCREMENT,
-     name VARCHAR(100) NOT NULL COMMENT '用户名',
-     pass VARCHAR(100) NOT NULL COMMENT '密码',
+     userName VARCHAR(100) NOT NULL COMMENT '用户名',
+     passwd VARCHAR(100) NOT NULL COMMENT '密码',
      avator VARCHAR(100) NOT NULL COMMENT '头像',
      moment VARCHAR(100) NOT NULL COMMENT '注册时间',
      PRIMARY KEY ( id )
@@ -83,6 +83,30 @@ create table if not exists comment(
 ```
 
 ## Sequelize
+
+- cli
+
+```sh
+# init
+npx sequelize-cli init
+
+# create db
+npx sequelize-cli db:create
+
+# create table
+npx sequelize-cli model:generate --name User --attributes username:string,avatar:string,email:string,password:string
+
+# migrations
+npx sequelize-cli db:migrate
+
+# generate seed file
+npx sequelize-cli seed:generate --name user
+
+# excute seeds
+npx sequelize-cli db:seed:all
+
+
+```
 
 ## restful api
 
