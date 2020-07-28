@@ -95,6 +95,7 @@ npx sequelize-cli db:create
 
 # create table
 npx sequelize-cli model:generate --name User --attributes username:string,avatar:string,email:string,password:string
+npx sequelize-cli model:generate --name Test --attributes username:'{}'
 
 # migrations
 npx sequelize-cli db:migrate
@@ -125,3 +126,27 @@ const middleware = await koaWebpack(options);
 app.use(middleware);
 
 ```
+
+## Q&A
+
+1. sequelize-cli 参数为什么没有设置字符长度
+   > 不确定, 貌似用不着
+2. Cannot resolve module 'fs'
+
+   > using node webpack will compile for usage in a Node.js-like environment (uses Node.js require to load chunks and not touch any built in modules like fs or path).
+
+   ```js
+    // webpack.config.js
+   {
+    ...,
+    target: 'node'
+   }
+    // refs: https://v4.webpack.js.org/concepts/targets/
+   ```
+
+3. webpack hot reload
+
+   > webpack-dev-middleware
+
+4. no cookie
+   > https://segmentfault.com/q/1010000012816626

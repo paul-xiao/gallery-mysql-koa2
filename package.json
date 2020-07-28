@@ -4,23 +4,25 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon node index.js"
+    "dev": "nodemon --inspect index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@koa/router": "^9.3.1",
+    "bcrypt": "^5.0.0",
     "koa": "^2.13.0",
+    "koa-bodyparser": "^4.3.0",
+    "koa-session": "^6.0.0",
     "koa-static": "^5.0.0",
+    "koa2-cors": "^2.0.6",
     "merge-options": "^2.0.0",
     "mysql2": "^2.1.0",
     "sequelize": "^6.3.3"
   },
   "devDependencies": {
     "chalk": "^4.1.0",
-    "koa-webpack-dev-middleware": "^2.0.2",
-    "koa-webpack-hot-middleware": "^1.0.3",
     "nodemon": "^2.0.4",
     "sequelize-cli": "^6.2.0",
     "webpack": "4",
