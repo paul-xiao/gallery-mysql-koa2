@@ -149,4 +149,4 @@ app.use(middleware);
    > webpack-dev-middleware
 
 4. no cookie
-   > https://segmentfault.com/q/1010000012816626
+   > [引入 mockjs 导致 XHR 无法携带 cookie 的问题](https://www.jianshu.com/p/fe5f775b541d/)

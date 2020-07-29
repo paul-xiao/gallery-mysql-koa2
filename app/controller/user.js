@@ -44,7 +44,8 @@ class UserCtrl {
     ctx.response.body = 'OK'
   }
   static async findAll(ctx, next) {
-    console.log(ctx.cookie)
+    console.log(ctx.cookies.get('koa.sess'))
+    ctx.session.user = 'paul'
     const users = await User.findAll()
     ctx.response.body = users
   }
@@ -64,6 +65,7 @@ class UserCtrl {
           ctx.session.userInfo = {
             username,
           }
+          ctx.cookies.set('user', username)
           ctx.body = {
             status: true,
             message: '登录成功',
@@ -76,6 +78,26 @@ class UserCtrl {
       ctx.body = {
         status: false,
         message: error.message || '服务端错误',
+      }
+    }
+  }
+  static async Logout(ctx, next) {
+    ctx.session = null
+    ctx.body = {
+      status: true,
+      message: 'ok',
+    }
+  }
+  static async sessionCheck(ctx, next) {
+    if (ctx.session.userInfo) {
+      ctx.body = {
+        status: true,
+        message: 'ok',
+      }
+    } else {
+      ctx.body = {
+        status: false,
+        message: 'unauthrized',
       }
     }
   }
