@@ -127,6 +127,26 @@ app.use(middleware);
 
 ```
 
+## CSRF (跨站请求伪造: cross-site request forgery)
+
+- [koa-csrf](https://github.com/koajs/csrf)
+- [csurf](https://github.com/expressjs/csurf)
+
+## redis
+
+- [安装](https://github.com/microsoftarchive/redis/releases)
+- 运行
+
+```
+redis-server.exe redis.windows.conf
+
+yarn add ioredis
+```
+
+- [方案](https://www.dazhuanlan.com/2019/12/17/5df84172d36ee/)
+  - koa-redis + koa-generic-session
+  - ioredis+koa-session
+
 ## Q&A
 
 1. sequelize-cli 参数为什么没有设置字符长度
@@ -150,3 +170,7 @@ app.use(middleware);
 
 4. no cookie
    > [引入 mockjs 导致 XHR 无法携带 cookie 的问题](https://www.jianshu.com/p/fe5f775b541d/)
+
+## REFS
+
+1. [常见六大 web 安全问题](https://www.cnblogs.com/fundebug/p/details-about-6-web-security.html)
