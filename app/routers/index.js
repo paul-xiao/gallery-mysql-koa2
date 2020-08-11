@@ -1,6 +1,7 @@
 const Router = require('@koa/router')
 const router = new Router()
 const UserCtrl = require('../controller/user')
+const VersionCtrl = require('../controller/version')
 
 router
   .post('/user/signup', UserCtrl.CreateUser) //用户注册
@@ -11,5 +12,6 @@ router
   .delete('/user/logout', UserCtrl.Logout)
   .get('/user/:id', UserCtrl.findById)
   .delete('/user/:id', UserCtrl.removeUser)
+  .get('/update', VersionCtrl.checkUpdate)
 
 module.exports = router

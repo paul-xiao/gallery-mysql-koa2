@@ -96,6 +96,7 @@ npx sequelize-cli db:create
 # create table
 npx sequelize-cli model:generate --name User --attributes username:string,avatar:string,email:string,password:string
 npx sequelize-cli model:generate --name Test --attributes username:'{}'
+npx sequelize-cli model:generate --name Version --attributes wgtUrl:string,pkgUrl:string,appVersion:string
 
 # migrations
 npx sequelize-cli db:migrate
