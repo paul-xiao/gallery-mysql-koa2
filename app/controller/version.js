@@ -1,6 +1,9 @@
 const { Version } = require('../models')
 class VersionCtrl {
   static async checkUpdate(ctx, next) {
+    console.log(ctx.body)
+    console.log(ctx.query)
+    console.log(ctx.params)
     const appVersion = ctx.query.version
     const version = await Version.findAll()
     const { app_version, wgt_url, android_pkg_url, ios_pkg_url } = version[0]

@@ -172,6 +172,62 @@ yarn add ioredis
 4. no cookie
    > [引入 mockjs 导致 XHR 无法携带 cookie 的问题](https://www.jianshu.com/p/fe5f775b541d/)
 
+## 部署
+
+1. 安装 mysql
+
+```sh
+
+rpm -ivh http://repo.mysql.com/yum/mysql-5.7-community/el/7/x86_64/mysql57-community-release-el7-10.noarch.rpm
+
+yum install mysql-community-server -y
+systemctl start mysqld
+systemctl enable mysqld
+mysql -uroot -p$(awk '/temporary password/{print $NF}' /var/log/mysqld.log)
+# 数据库默认密码规则必须携带大小写字母、特殊符号，字符长度大于8否则会报错。因此设定较为简单的密码时需要首先修改set global validate_password_policy和_length参数值。
+
+set global validate_password_policy=0;
+set global validate_password_length=1;
+set password for root@localhost = password('123456');
+```
+
+2. 创建 bare 仓库
+
+```sh
+# init bare
+git init --bare server.igt
+
+# post-update hooks
+
+echo "server update"
+GIT_REPO=/home/paul/server.git
+TMP_GIT_CLONE=/home/paul/tmp/server
+PUBLIC_WWW=/home/paul/server
+
+rm -rf ${TMP_GIT_CLONE}
+git clone $GIT_REPO $TMP_GIT_CLONE
+rm -rf ${PUBLIC_WWW}
+cp -rf ${TMP_GIT_CLONE} ${PUBLIC_WWW}
+
+# push
+
+git push -f ssh://paul@144.34.184.214:28080/home/paul/server.git master
+
+```
+
+3. nginx 配置
+
+```sh
+
+location ^~ /api {
+proxy_pass http://127.0.0.1:3000;
+proxy_set_header Host $host;
+proxy_set_header X-Real-IP $remote_addr;
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+}
+```
+
 ## REFS
 
 1. [常见六大 web 安全问题](https://www.cnblogs.com/fundebug/p/details-about-6-web-security.html)
