@@ -96,7 +96,7 @@ npx sequelize-cli db:create
 # create table
 npx sequelize-cli model:generate --name User --attributes username:string,avatar:string,email:string,password:string
 npx sequelize-cli model:generate --name Test --attributes username:'{}'
-npx sequelize-cli model:generate --name Version --attributes wgtUrl:string,pkgUrl:string,appVersion:string
+npx sequelize-cli model:generate --name Version --attributes wgt_url:string,android_pkg_url:string,ios_pkg_url:string,app_version:string
 
 # migrations
 npx sequelize-cli db:migrate
@@ -200,9 +200,9 @@ git init --bare server.igt
 # post-update hooks
 
 echo "server update"
-GIT_REPO=/home/paul/server.git
-TMP_GIT_CLONE=/home/paul/tmp/server
-PUBLIC_WWW=/home/paul/server
+GIT_REPO=/root/update_test/api.git
+TMP_GIT_CLONE=/root/update_test/tmp/api
+PUBLIC_WWW=/root/update_test/api
 
 rm -rf ${TMP_GIT_CLONE}
 git clone $GIT_REPO $TMP_GIT_CLONE
@@ -212,6 +212,8 @@ cp -rf ${TMP_GIT_CLONE} ${PUBLIC_WWW}
 # push
 
 git push -f ssh://paul@144.34.184.214:28080/home/paul/server.git master
+git push -f ssh://47.240.93.218/root/update_test/api.git master
+
 
 ```
 
@@ -226,6 +228,20 @@ proxy_set_header X-Real-IP $remote_addr;
 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
 }
+
+
+start nginx  # 启动 nginx
+nginx -s reload  # 重新载入配置文件
+nginx -s reopen # 重启 nginx
+nginx -s stop  # 停止 nginx
+```
+
+4. 启动服务
+
+```sh
+sudo yum -y install nodejs
+
+
 ```
 
 ## REFS
