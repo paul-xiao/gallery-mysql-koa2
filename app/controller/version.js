@@ -7,7 +7,7 @@ class VersionCtrl {
     const appVersion = ctx.query.version
     // const version = await Version.findAll()
     // const { app_version, wgt_url, android_pkg_url, ios_pkg_url } = version[0]
-    const app_version = '1.0.2'
+    const app_version = '1.0.3'
     if (appVersion < app_version) {
       if (appVersion.split('.')[0] < app_version.split('.')[0]) {
         // 大版本更新
