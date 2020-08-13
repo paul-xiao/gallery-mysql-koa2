@@ -212,7 +212,7 @@ cp -rf ${TMP_GIT_CLONE} ${PUBLIC_WWW}
 # push
 
 git push -f ssh://paul@144.34.184.214:28080/home/paul/server.git master
-git push -f ssh://47.240.93.218/root/update_test/api.git master
+git push -f ssh://root@47.240.93.218/root/update_test/api.git master
 
 
 ```
