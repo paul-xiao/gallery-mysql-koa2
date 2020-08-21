@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken')
+const { SECRET } = require('../config')
 const { User } = require('../models')
 const { getEncryptedPwd, checkPwd } = require('../utils')
 class UserCtrl {
@@ -44,8 +46,6 @@ class UserCtrl {
     ctx.response.body = 'OK'
   }
   static async findAll(ctx, next) {
-    console.log(ctx.cookies.get('koa.sess'))
-    ctx.session.user = 'paul'
     const users = await User.findAll()
     ctx.response.body = users
   }
@@ -53,23 +53,46 @@ class UserCtrl {
     const user = await User.findByPk(ctx.params.id)
     ctx.response.body = user
   }
+
+  /**
+   * 用户登录
+   * @param username
+   * @param password
+   */
+
   static async userLogin(ctx, next) {
     try {
       const { username, password } = ctx.request.body
       const users = await User.findAll({
         where: { username },
       })
+      if (!users.length) {
+        ctx.body = {
+          status: false,
+          message: '用户名/密码错误',
+        }
+        return false
+      }
       for (const user of users) {
         const isCorrectPwd = await checkPwd(password, user.password)
         if (isCorrectPwd) {
-          ctx.session.userInfo = {
-            username,
-          }
-          ctx.cookies.set('user', username)
+          // ctx.session.userInfo = {
+          //   username,
+          // }
+          // ctx.cookies.set('user', username)
           ctx.body = {
             status: true,
             message: '登录成功',
-            user: username,
+            token: jwt.sign(
+              { name: user.username, id: user.id }, // 加密userToken
+              SECRET,
+              { expiresIn: Math.floor(Date.now() / 1000) + 60 }
+            ),
+          }
+        } else {
+          ctx.body = {
+            status: false,
+            message: '用户名/密码错误',
           }
         }
       }
@@ -82,7 +105,6 @@ class UserCtrl {
     }
   }
   static async Logout(ctx, next) {
-    ctx.session = null
     ctx.body = {
       status: true,
       message: 'ok',
@@ -100,6 +122,18 @@ class UserCtrl {
         message: 'unauthrized',
       }
     }
+  }
+  /**
+   * 获取用户信息
+   * @param token
+   */
+
+  static async getUserInfoByToken(ctx, next) {
+    const token = ctx.header.authorization.split(' ')[1]
+    const decoded = jwt.decode(token, { complete: true })
+    const user = await User.findByPk(decoded.payload.id)
+    const { password, ...data } = user.dataValues
+    ctx.body = data
   }
 }
 
