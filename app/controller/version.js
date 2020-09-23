@@ -1,4 +1,5 @@
 const { Version } = require('../models')
+console.log(Version)
 class VersionCtrl {
   static async checkUpdate(ctx, next) {
     console.log(ctx.body)

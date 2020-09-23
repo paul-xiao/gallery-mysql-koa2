@@ -1,6 +1,10 @@
 const jwt = require('jsonwebtoken')
 const { SECRET } = require('../config')
 const { User } = require('../models')
+const { Post } = require('../models')
+console.log(User)
+console.log(Post)
+
 const { getEncryptedPwd, checkPwd } = require('../utils')
 class UserCtrl {
   static async CreateUser(ctx, next) {
@@ -9,6 +13,8 @@ class UserCtrl {
       console.log(username)
 
       //重名检查
+
+
       const user = await User.findAll({
         where: {
           username,

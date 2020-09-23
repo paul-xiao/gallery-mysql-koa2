@@ -13,12 +13,19 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   };
+  const { STRING, INTEGER } = DataTypes
   Post.init({
-    user_id: DataTypes.STRING,
-    title: DataTypes.STRING,
-    desc: DataTypes.STRING,
-    content: DataTypes.STRING,
-    thunmbnails: DataTypes.STRING
+    user_id: {
+      type: INTEGER,
+      references: {
+        model: 'Users',
+        key: 'id'
+      }
+    },
+    title: STRING,
+    desc: STRING,
+    content: STRING,
+    thunmbnails: STRING
   }, {
     sequelize,
     modelName: 'Post',

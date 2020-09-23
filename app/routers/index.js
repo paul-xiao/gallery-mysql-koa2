@@ -1,6 +1,7 @@
 const Router = require('@koa/router')
 const router = new Router()
 const UserCtrl = require('../controller/user')
+const postCtrl = require('../controller/post')
 const VersionCtrl = require('../controller/version')
 
 router
@@ -14,5 +15,6 @@ router
   .get('/user/:id', UserCtrl.findById)
   .delete('/user/:id', UserCtrl.removeUser)
   .get('/update', VersionCtrl.checkUpdate)
+  .get('/post/add', postCtrl.addPost)
 
 module.exports = router
