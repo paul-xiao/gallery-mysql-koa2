@@ -1,30 +1,23 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = async (sequelize, DataTypes) => {
-  class User extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
+const connection = require('../utils/connection')
+class User {
+    static create(obj) {
+        connection.query('INSERT INTO `user` (`name`, `phone`, `password`, `avatar`, `email`, `region`, `createdAt`) VALUES (?,?,?,?,?,?,?)', Object.values(obj), function (err, results, fields) {
+            console.log(results); // results contains rows returned by server
+            console.log(fields); // fields contains extra meta data about results, if available
+        })
     }
-  };
-  const { STRING, INTEGER } = DataTypes
-  User.init({
-    username: {
-      type: STRING,
-    },
-    avatar: STRING,
-    email: STRING,
-    password: STRING,
-    phone: INTEGER
-  }, {
-    sequelize,
-    modelName: 'User',
-  });
-  return User;
-};
+    static findAll() {
+        connection.query('SELECT * FROM `user`', function (err, results, fields) {
+            console.log(results); // results contains rows returned by server
+            console.log(fields); // fields contains extra meta data about results, if available
+        })
+    }
+    static findByPk(id) {
+        connection.query('SELECT * FROM `user` where id = ?', [id], function (err, results, fields) {
+            console.log(results); // results contains rows returned by server
+            // console.log(fields); // fields contains extra meta data about results, if available
+        })
+    }
+}
+
+module.exports = User

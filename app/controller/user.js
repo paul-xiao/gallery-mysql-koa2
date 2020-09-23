@@ -1,9 +1,7 @@
 const jwt = require('jsonwebtoken')
 const { SECRET } = require('../config')
 const { User } = require('../models')
-const { Post } = require('../models')
 console.log(User)
-console.log(Post)
 
 const { getEncryptedPwd, checkPwd } = require('../utils')
 class UserCtrl {
