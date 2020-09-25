@@ -15,6 +15,9 @@ router
   .get('/user/:id', UserCtrl.findById)
   .delete('/user/:id', UserCtrl.removeUser)
   .get('/update', VersionCtrl.checkUpdate)
-  .get('/post/add', postCtrl.addPost)
+  .post('/post/add', postCtrl.addPost)
+  .post('/post/remove/:id', postCtrl.removePost)
+  .post('/post/like', postCtrl.ToggleLikes)
+  .get('/post/list', postCtrl.findAll)
 
 module.exports = router

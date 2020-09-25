@@ -7,7 +7,7 @@ module.exports = (app) => {
   // unless the URL starts with '/public'
   app.use(
     jwtKoa({ secret: SECRET }).unless({
-      path: [/^\/user\/login/, /^\/user\/signup/], //登录接口不验证
+      path: [/^\/user\/login/, /^\/user\/signup/] // 登录接口不验证
     })
   )
 
@@ -23,7 +23,7 @@ module.exports = (app) => {
           try {
             //jwt.verify方法验证token是否有效
             jwt.verify(token, SECRET, function (err, decoded) {
-              console.log(decoded)
+              console.log(decoded, 'token 有效')
             })
           } catch (error) {
             //token过期 生成新的token

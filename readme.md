@@ -94,9 +94,21 @@ npx sequelize-cli init
 npx sequelize-cli db:create
 
 # create table
-npx sequelize-cli model:generate --name User --attributes username:string,avatar:string,email:string,password:string
+npx sequelize-cli model:generate --force --name User --attributes username:string,avatar:string,email:string,password:string,phone:string
 npx sequelize-cli model:generate --name Test --attributes username:'{}'
 npx sequelize-cli model:generate --name Version --attributes wgt_url:string,android_pkg_url:string,ios_pkg_url:string,app_version:string
+
+# post
+npx sequelize-cli model:generate --force --name Post --attributes user_id:string,title:string,desc:string,content:string,thunmbnails:string
+
+# comments 
+npx sequelize-cli model:generate --force --name Comment --attributes user_id:string,post_id:string,comment:string
+
+# user_post_like_relation 
+npx sequelize-cli model:generate --force --name user_post_like_relation --attributes user_id:string,post_id:string
+
+# user_post_comment_like_relation 
+npx sequelize-cli model:generate --force --name user_post_comment_like_relation --attributes user_id:string,post_id:string,comment_id:string
 
 # migrations
 npx sequelize-cli db:migrate
@@ -106,6 +118,28 @@ npx sequelize-cli seed:generate --name user
 
 # excute seeds
 npx sequelize-cli db:seed:all
+
+# foreigon key
+
+ Post.init({
+    user_id: {
+      type: INTEGER,
+      references: {
+        model: 'Users',
+        key: 'id'
+      }
+    },
+    title: STRING,
+    desc: STRING,
+    content: STRING,
+    thunmbnails: STRING
+  }, {
+    sequelize,
+    modelName: 'Post',
+  });
+# issue
+- User Model undefined  ==> 重新生成User Model后正常
+- 外键未设置   allowNull: false 不生效
 
 
 ```
@@ -243,7 +277,6 @@ sudo yum -y install nodejs
 
 
 ```
-
 ## REFS
 
 1. [常见六大 web 安全问题](https://www.cnblogs.com/fundebug/p/details-about-6-web-security.html)

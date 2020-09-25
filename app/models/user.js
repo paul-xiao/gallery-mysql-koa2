@@ -1,22 +1,36 @@
 const connection = require('../utils/connection')
+const { fields, where } = require('../utils/statement')
 class User {
     static create(obj) {
-        connection.query('INSERT INTO `user` (`name`, `phone`, `password`, `avatar`, `email`, `region`, `createdAt`) VALUES (?,?,?,?,?,?,?)', Object.values(obj), function (err, results, fields) {
-            console.log(results); // results contains rows returned by server
-            console.log(fields); // fields contains extra meta data about results, if available
-        })
+        const query = fields(obj)
+        const sql = `INSERT INTO user SET ${query}`
+        console.log(sql)
+        return connection.query(sql)
+
     }
-    static findAll() {
-        connection.query('SELECT * FROM `user`', function (err, results, fields) {
-            console.log(results); // results contains rows returned by server
-            console.log(fields); // fields contains extra meta data about results, if available
-        })
+    static update(val, opt) {
+        const query = fields(val)
+        const filter = where(opt)
+        const sql = `UPDATE user SET ${query}  WHERE ${filter}`
+        console.log(sql)
+        return connection.query(sql)
+
+    }
+    static findAll(opt) {
+        const filter = where(opt)
+        let sql = filter ? `SELECT * FROM user WHERE ${filter}` : `SELECT * FROM user`
+        console.log(filter)
+        console.log(sql)
+        return connection.query(sql)
     }
     static findByPk(id) {
-        connection.query('SELECT * FROM `user` where id = ?', [id], function (err, results, fields) {
-            console.log(results); // results contains rows returned by server
-            // console.log(fields); // fields contains extra meta data about results, if available
-        })
+        const sql = `SELECT * FROM user WHERE id = ${id}`
+        return connection.query(sql)
+    }
+    static removeByPK(id) {
+        const sql = `DELETE FROM user WHERE id = ${id}`
+        console.log(sql)
+        return connection.query(sql)
     }
 }
 

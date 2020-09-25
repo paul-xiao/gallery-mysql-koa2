@@ -1,38 +1,35 @@
 const jwt = require('jsonwebtoken')
 const { SECRET } = require('../config')
 const { User } = require('../models')
-console.log(User)
 
 const { getEncryptedPwd, checkPwd } = require('../utils')
 class UserCtrl {
   static async CreateUser(ctx, next) {
+
     try {
-      const { username, password } = ctx.request.body
-      console.log(username)
-
+      const { name, password, ...rest } = ctx.request.body
+      if (!name || !password) {
+        throw 'name and password is required'
+      }
       //重名检查
-
-
-      const user = await User.findAll({
-        where: {
-          username,
-        },
-      })
-      if (user.length) {
+      const [result] = await User.findAll({ name })
+      if (result.length) {
         throw '用户已存在'
       }
       const encryptedPwd = await getEncryptedPwd(password)
       console.log(encryptedPwd)
 
       await User.create({
-        username,
+        name,
         password: encryptedPwd,
+        ...rest
       })
       ctx.body = {
         status: true,
         message: '注册成功',
       }
     } catch (error) {
+      console.error(error)
       ctx.body = {
         status: false,
         message: error || '服务器异常',
@@ -40,22 +37,42 @@ class UserCtrl {
     }
   }
   static async updateUser(ctx, next) {
-    const { id, name } = ctx.request.body
-    console.log(id, name)
-    const user = await User.update({ username: name }, { where: { id: id } })
-    ctx.response.body = user
+    const { id, ...rest } = ctx.request.body
+    try {
+      await User.update(rest, { id: id })
+      ctx.response.body = {
+        status: true,
+        msg: '更新成功'
+      }
+    } catch (error) {
+      ctx.response.body = {
+        status: false,
+        msg: error.message || '更新失败'
+      }
+    }
   }
   static async removeUser(ctx, next) {
-    await User.destroy({ where: { id: ctx.params.id } })
-    ctx.response.body = 'OK'
+    try {
+      const res = await User.removeByPK(ctx.params.id)
+      console.error(res)
+      ctx.response.body = ctx.response.body = {
+        status: true,
+        msg: '删除成功'
+      }
+    } catch (error) {
+      ctx.response.body = {
+        status: false,
+        msg: error.message || '删除失败'
+      }
+    }
   }
   static async findAll(ctx, next) {
-    const users = await User.findAll()
-    ctx.response.body = users
+    const [result] = await User.findAll()
+    ctx.response.body = result
   }
   static async findById(ctx, next) {
-    const user = await User.findByPk(ctx.params.id)
-    ctx.response.body = user
+    const [result] = await User.findByPk(ctx.params.id)
+    ctx.response.body = result[0]
   }
 
   /**
@@ -66,29 +83,19 @@ class UserCtrl {
 
   static async userLogin(ctx, next) {
     try {
-      const { username, password } = ctx.request.body
-      const users = await User.findAll({
-        where: { username },
-      })
-      if (!users.length) {
-        ctx.body = {
-          status: false,
-          message: '用户名/密码错误',
-        }
-        return false
-      }
+      const { name, password } = ctx.request.body
+      const [users] = await User.findAll({ name })
+      console.log(users)
+      if (!users.length) throw '用户名/密码错误'
       for (const user of users) {
         const isCorrectPwd = await checkPwd(password, user.password)
         if (isCorrectPwd) {
-          // ctx.session.userInfo = {
-          //   username,
-          // }
-          // ctx.cookies.set('user', username)
+
           ctx.body = {
             status: true,
             message: '登录成功',
             token: jwt.sign(
-              { name: user.username, id: user.id }, // 加密userToken
+              { name: user.name, id: user.id }, // 加密userToken
               SECRET,
               { expiresIn: Math.floor(Date.now() / 1000) + 60 }
             ),

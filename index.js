@@ -1,5 +1,5 @@
 const Koa = require('koa')
-const bodyParser = require('koa-bodyparser')
+const koaBody = require('koa-body')
 const serve = require('koa-static')
 const { resolve } = require('path')
 // const webpackConfig = require('./app/config/webpack.config')
@@ -9,12 +9,19 @@ const cors = require('@koa/cors') //跨域处理
 const jwt_auth = require('./app/auth/jwt')
 const app = new Koa()
 
+
+
 jwt_auth(app) //jwt Auth
 
 async function start() {
   try {
     app.keys = ['some secret hurr']
-    app.use(bodyParser())
+    app.use(koaBody({
+      multipart: true,
+      formidable: {
+        maxFileSize: 2000 * 1024 * 1024    // 设置上传文件大小最大限制，默认2M
+      }
+    }))
     app.use(
       cors({
         origin: 'http://localhost:8080/', //只允许http://localhost:8080这个域名的请求
